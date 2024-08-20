@@ -14,11 +14,7 @@
         </div>
       </div>
     </section>
-    <form id="form" class="container m-4 pl-4" method="POST" enctype="multipart/form-data">
-      <!-- User ID (hidden) -->
-      <input type="hidden" name="userid" value="12345" />
-
-      <!-- Client Name -->
+    <form id="form" class="container m-4 pl-4" method="POST">
       <div class="field">
         <label class="label">Client Name</label>
         <div class="control">
@@ -26,24 +22,23 @@
             class="input"
             type="text"
             placeholder="Your Client Name"
-            name="name"
+            name="Client Name"
           />
         </div>
       </div>
 
-      <!-- Profile Picture -->
-      <div class="field">
-        <label class="label">Profile Picture</label>
+      <!-- <div class="field">
+        <label class="label">Last Name</label>
         <div class="control">
           <input
             class="input"
-            type="file"
-            name="profilepicture"
+            type="text"
+            placeholder="Your Last Name"
+            name="Last Name"
           />
         </div>
-      </div>
+      </div> -->
 
-      <!-- Email -->
       <div class="field">
         <label class="label">Email</label>
         <div class="control">
@@ -56,7 +51,6 @@
         </div>
       </div>
 
-      <!-- Password -->
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
@@ -69,7 +63,6 @@
         </div>
       </div>
 
-      <!-- Date of Birth -->
       <div class="field">
         <label class="label">Date of Birth</label>
         <div class="control">
@@ -82,7 +75,6 @@
         </div>
       </div>
 
-      <!-- Gender -->
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
@@ -95,7 +87,6 @@
         </div>
       </div>
 
-      <!-- Agree to Terms -->
       <div class="field">
         <label class="label">Agree to Terms</label>
         <div class="control">
@@ -106,7 +97,6 @@
         </div>
       </div>
 
-      <!-- Additional Information -->
       <div class="field">
         <label class="label">Additional Information</label>
         <div class="control">
@@ -125,7 +115,7 @@
           </button>
         </div>
         <div class="control">
-          <button class="button is-danger" type="reset">Cancel</button>
+          <button class="button is-danger">Cancel</button>
         </div>
       </div>
     </form>
@@ -152,19 +142,29 @@
 
         // Collect the form data
         var formData = new FormData(this);
+        var keyValuePairs = [];
+        for (var pair of formData.entries()) {
+          keyValuePairs.push(pair[0] + "=" + pair[1]);
+        }
+
+        var formDataString = keyValuePairs.join("&");
 
         // Send a POST request to your Google Apps Script
         fetch(
           "https://script.google.com/macros/s/AKfycbxsjhp6pTLnNPMrUuX1AV8nn8n0XpFciIwZLWEErpzYq-HdiR8pWPkT6DynXOWdf1mdXA/exec",
           {
+            redirect: "follow",
             method: "POST",
-            body: formData,
+            body: formDataString,
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
           }
         )
           .then(function (response) {
             // Check if the request was successful
-            if (response.ok) {
-              return response.json(); // Assuming your script returns JSON response
+            if (response) {
+              return response; // Assuming your script returns JSON response
             } else {
               throw new Error("Failed to submit the form.");
             }
